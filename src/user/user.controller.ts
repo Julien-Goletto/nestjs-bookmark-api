@@ -7,9 +7,6 @@ export class UserController {
   @UseGuards(AuthGuard('jwt'))
   @Get('me') // Blank means it catches any route from the previous node
   getMe(@Req() req: Request) {
-    console.log({
-      user: req.user,
-    });
     return req.user;
   }
 }
