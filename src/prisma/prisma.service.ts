@@ -1,13 +1,14 @@
 import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { PrismaClient } from '@prisma/client';
 
-@Injectable()
+@Injectable() // Decorator injectable is compulsary to put dependencies injections in classes
 export class PrismaService extends PrismaClient {
-  constructor() {
+  constructor(config: ConfigService) {
     super({
       datasources: {
         db: {
-          url: 'postgresql://bookmarkAPI:bookmarkAPI2022@localhost:5434/bookmarkAPI?schema=public',
+          url: config.get('DATABASE_URL'),
         },
       },
     });
