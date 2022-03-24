@@ -31,25 +31,67 @@ describe('App e2e', () => {
       password: '123',
     };
     describe('Signup', () => {
+      it('Should throw error if no body is provided', () => {
+        return pactum.spec().post('/auth/signup').withBody({}).expectStatus(400);
+      });
+      it('Should throw error if email is empty', () => {
+        return pactum
+          .spec()
+          .post('/auth/signup')
+          .withBody({ password: dto.password })
+          .expectStatus(400);
+      });
+      it('Should throw error if password is empty', () => {
+        return pactum.spec().post('/auth/signup').withBody({ email: dto.email }).expectStatus(400);
+      });
       it('Should sign up', () => {
         return pactum.spec().post('/auth/signup').withBody(dto).expectStatus(201);
       });
     });
+
     describe('Signin', () => {
+      it('Should throw error if no body is provided', () => {
+        return pactum.spec().post('/auth/signin').withBody({}).expectStatus(400);
+      });
+      it('Should throw error if email is empty', () => {
+        return pactum
+          .spec()
+          .post('/auth/signin')
+          .withBody({ password: dto.password })
+          .expectStatus(400);
+      });
+      it('Should throw error if password is empty', () => {
+        return pactum.spec().post('/auth/signin').withBody({ email: dto.email }).expectStatus(400);
+      });
       it('Should sign up', () => {
-        return pactum.spec().post('/auth/signin').withBody(dto).expectStatus(200);
+        return pactum
+          .spec()
+          .post('/auth/signin')
+          .withBody(dto)
+          .expectStatus(200)
+          .stores('userAT', 'access_token'); // Stores method allow to keep in memory the AT to pass it to next tests
       });
     });
   });
+
   describe('User', () => {
-    describe('Get me', () => {});
+    describe('Get me', () => {
+      it('Should get current user', () => {
+        return pactum
+          .spec()
+          .get('/users/me')
+          .withHeaders({ Authorization: 'Bearer $S{userAT}' }) // To catch the stored token and pass it to the Headers
+          .expectStatus(200);
+      });
+    });
     describe('Edit user', () => {});
   });
+
   describe('Bookmark', () => {
     describe('Create bookmark', () => {});
     describe('Get bookmarks', () => {});
     describe('Get bookmarks by id', () => {});
-    describe('Edit bookmark', () => {});
-    describe('Delete bookmark', () => {});
+    describe('Edit bookmark by id', () => {});
+    describe('Delete bookmark by id', () => {});
   });
 });
