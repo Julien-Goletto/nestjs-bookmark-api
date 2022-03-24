@@ -13,4 +13,9 @@ export class PrismaService extends PrismaClient {
       },
     });
   }
+
+  cleanDb() {
+    return this.$transaction([this.bookmark.deleteMany(), this.user.deleteMany()]);
+    // By using transaction we ensure that bookmarks will be deleted first and avoid somme expected errors.
+  }
 }

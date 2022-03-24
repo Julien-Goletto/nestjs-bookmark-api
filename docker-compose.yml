@@ -10,5 +10,17 @@ services:
       POSTGRES_DB: bookmarkAPI
     networks:
       - bookmarkAPI
+
+  test-db:
+    image: postgres:13
+    ports: 
+      - 5435:5432
+    environment:
+      POSTGRES_USER: bookmarkAPI
+      POSTGRES_PASSWORD: bookmarkAPI2022
+      POSTGRES_DB: bookmarkAPI
+    networks:
+      - bookmarkAPI
+
 networks:
   bookmarkAPI:
